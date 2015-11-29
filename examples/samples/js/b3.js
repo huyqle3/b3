@@ -1,19 +1,24 @@
 /*
-Create a three.js scene
+Loading b3.js will create a Three.js camera and scene for the project.
+The project will have an empty scene and full sized camera.
 */
 var scene = new THREE.Scene();
-
 var camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 10000 );
 
-var objects = [], objectsControls = [];
-
 function initiate(){
+  /*
+  Initiate function creates the 3D environment with a world coordinate grid.
+  */
 	var cameraControls;
-	var coords1, coords2, coords3;
-	var lastControlsIndex = -1, controlsIndex = -1, index = -1;
+	var coords1;
+  var coords2;
+  var coords3;
+	var lastControlsIndex = -1;
+  var controlsIndex = -1;
+  var index = -1;
 
 	/*
-	Setup three.js WebGL renderer
+	Setup three.js WebGL renderer.
 	*/
 	var renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize($(window).width(), $(window).height());
@@ -25,57 +30,60 @@ function initiate(){
 	document.body.appendChild( renderer.domElement );
 
 	/*
-	Create a three.js camera
+	Set the x, y, z coordinates of the camera.
 	*/
 	camera.position.x = 200;
-    camera.position.y = 200;
-    camera.position.z = 200;
+  camera.position.y = 200;
+  camera.position.z = 200;
    	
+  /*
+  Origin is set to (0, 0, 0), and the camera will look at the origin when page is loaded.
+  */
 	var origin = new THREE.Vector3(0, 0, 0);
 	camera.lookAt(origin);
 
-    // world coordinate system (thin dashed helping lines)
-    var lineGeometry = new THREE.Geometry();
-    var vertArray = lineGeometry.vertices;
-    vertArray.push(new THREE.Vector3(150, 0, 0), origin, new THREE.Vector3(0, 150, 0), origin, new THREE.Vector3(0, 0, 150));
-    lineGeometry.computeLineDistances();
-    var lineMaterial = new THREE.LineDashedMaterial({color: 0x000000, dashSize: 1, gapSize: 2});
-    var coords = new THREE.Line(lineGeometry, lineMaterial);
-    scene.add(coords);
+  /*
+  World coordinate system act in the place of the graph indicator.
+  Add the coordinates to the scene.
+  */
+  var lineGeometry = new THREE.Geometry();
+  var vertArray = lineGeometry.vertices;
+  vertArray.push(new THREE.Vector3(150, 0, 0), origin, new THREE.Vector3(0, 150, 0), origin, new THREE.Vector3(0, 0, 150));
+  lineGeometry.computeLineDistances();
+  var lineMaterial = new THREE.LineDashedMaterial({color: 0x000000, dashSize: 1, gapSize: 2});
+  var coords = new THREE.Line(lineGeometry, lineMaterial);
+  scene.add(coords);
 
 	/*
-	Apply VR headset orientation and positional to camera.
+	OrbitControls is used for mouse coontrols on the Camera.
+  LeapCameraControls is used for LeapMotion motion controllers on the camera.
 	*/
 	var controls = new THREE.OrbitControls( camera, renderer.domElement );
-
 	cameraControls = new THREE.LeapCameraControls(camera);
 
-    cameraControls.rotateEnabled  = true;
-    cameraControls.rotateSpeed    = 3;
-    cameraControls.rotateHands    = 1;
-    cameraControls.rotateFingers  = [2, 3];
+  cameraControls.rotateEnabled  = true;
+  cameraControls.rotateSpeed    = 3;
+  cameraControls.rotateHands    = 1;
+  cameraControls.rotateFingers  = [2, 3];
     
-    cameraControls.zoomEnabled    = true;
-    cameraControls.zoomSpeed      = 6;
-    cameraControls.zoomHands      = 1;
-    cameraControls.zoomFingers    = [4, 5];
-    cameraControls.zoomMin        = 50;
-    cameraControls.zoomMax        = 2000;
+  cameraControls.zoomEnabled    = true;
+  cameraControls.zoomSpeed      = 6;
+  cameraControls.zoomHands      = 1;
+  cameraControls.zoomFingers    = [4, 5];
+  cameraControls.zoomMin        = 50;
+  cameraControls.zoomMax        = 2000;
     
-    cameraControls.panEnabled     = true;
-    cameraControls.panSpeed       = 2;
-    cameraControls.panHands       = 2;
-    cameraControls.panFingers     = [6, 12];
-    cameraControls.panRightHanded = false; // for left-handed person
-
+  cameraControls.panEnabled     = true;
+  cameraControls.panSpeed       = 2;
+  cameraControls.panHands       = 2;
+  cameraControls.panFingers     = [6, 12];
+  cameraControls.panRightHanded = false; // for left-handed people
 
 	/*
-	Apply VR stereo rendering to renderer
+	effect variable is used to generate the Virtual Reality effect
 	*/
 	var effect = new THREE.VREffect( renderer );
 	effect.setSize( window.innerWidth, window.innerHeight );
-
-    
 
 	/*
 	Request animation frame loop function
@@ -87,12 +95,12 @@ function initiate(){
 		// cube.rotation.y += 0.01;
 
 		/*
-		Update VR headset position and apply to camera.
+		Use mouse controls and update VR headset position and apply to camera.
 		*/
 		controls.update();
 
 		/*
-		Render the scene through the VREffect.
+		Render the scene with the VR.
 		*/
 		effect.render( scene, camera );
 
@@ -100,30 +108,35 @@ function initiate(){
 	}
 
 	/*
-	Kick off animation loop
+	Kick off animation loop with the function above.
 	*/
 	animate();
 
-	// leap loop
-    Leap.loop(function(frame) {
-      // show cursor
-      showCursor(frame);
+	/*
+  Leap Motion loads with loop function.
+  */
+  Leap.loop(function(frame) {
+    // Show cursosr is a function from Leap Controls.
+    showCursor(frame);
 
-      // set correct camera control
-      controlsIndex = focusObject(frame);
-      if (index == -1) {
-        cameraControls.update(frame);
-      } else {
-        objectsControls[index].update(frame);
-      };
+    // Set correct camera control.
+    controlsIndex = focusObject(frame);
+    if (index == -1) {
+      cameraControls.update(frame);
+    } else {
+      objectsControls[index].update(frame);
+    };
 
-      effect.render(scene, camera);
-    });
+    effect.render(scene, camera);
+  });
 
-    // detect controls change
-    setInterval(changeControlsIndex, 250);
+  // setInterval is a timer that runs changeControlsIndex every 250 milliseconds.
+  setInterval(changeControlsIndex, 250);
 
-    function changeControlsIndex() {
+  /*
+  Filler function in the works to set highlighting objects.
+  */
+  function changeControlsIndex() {
     if (lastControlsIndex == controlsIndex) {
       if (index != controlsIndex && controlsIndex > -2) {
         // new object or camera to control
@@ -137,6 +150,9 @@ function initiate(){
     lastControlsIndex = controlsIndex;
   };
 
+  /*
+  Filer function to allow transformation of objects
+  */
   function transform(tipPosition, w, h) {
     var width = 150;
     var height = 150;
@@ -151,6 +167,9 @@ function initiate(){
     return [x, y];
   };
 
+  /*
+  showCursor is used to project a red pointer to the screen with Leap Motion controller.
+  */
   function showCursor(frame) {
     var hl = frame.hands.length;
     var fl = frame.pointables.length;
@@ -168,6 +187,9 @@ function initiate(){
     };
   };
 
+  /*
+  Selection of an object.
+  */
   function focusObject(frame) {
     var hl = frame.hands.length;
     var fl = frame.pointables.length;
@@ -195,6 +217,9 @@ function initiate(){
     return -2;
   };
 
+  /*
+  Extra function originally used to render the VR effect.
+  */
   function render() {
   	effect.render(scene, camera);
   };
@@ -210,19 +235,21 @@ function initiate(){
 	Listen for keyboard event and zero positional sensor on appropriate keypress.
 	*/
 	function onkey(event) {
-	event.preventDefault();
+  	event.preventDefault();
 
-	if (event.keyCode == 90) { // z
-		controls.zeroSensor();
-	}
-  	};
+    // Z key for zero positional
+  	if (event.keyCode == 90) {
+  		controls.zeroSensor();
+  	}
+  };
 
+  // Add event listener to listen for the z key.
   window.addEventListener("keydown", onkey, true);
 
-
 	/*
-	Handle window resizes
+	Preliminary function to handle window resizes.
 	*/
+  /*
 	function onWindowResize() {
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
@@ -231,10 +258,21 @@ function initiate(){
 	}
 
 	window.addEventListener( 'resize', onWindowResize, false );
+  */
 }
 
-function createPoints(){
+function coordinates(jsonFile){
+  var b3Json = null;
+
+  // var b3Json = require(jsonFile);
+  $.getJSON(jsonFile, function(json) {
+    console.log(json); // this will show the info it in firebug console
+  });
+  // console.log(b3Json);
+
 	for (var i = 0; i < 20; i ++) {
+    var objects = [], objectsControls = [];
+
 		var geometry = new THREE.SphereGeometry(3, 10, 10);
 
 		var material = new THREE.MeshNormalMaterial( {color: 0x38758A} );
@@ -271,5 +309,5 @@ function createPoints(){
 		scene.add( object );
 		objects.push(object);
 		objectsControls.push(objectControls);
-    }
+  }
 }
