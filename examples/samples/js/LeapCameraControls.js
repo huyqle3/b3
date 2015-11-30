@@ -1,10 +1,3 @@
-/*
- * @author Torsten Sprenger / http://torstensprenger.com
- *
- * Leap Camera Controls (http://leapmotion.com)
- * 
- */
-
 THREE.LeapCameraControls = function(camera) {
   var _this = this;
 

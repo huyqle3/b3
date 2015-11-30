@@ -4,11 +4,12 @@
 		<title>b3.js - example</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link href='css/style.css' rel='stylesheet' type='text/css'>
+		<link href='css/base.css' rel='stylesheet' type='text/css'>
 	</head>
 
 	<body>
-		<div id="container"></div>
+		<div id="b3" style="position: absolute; left:0px; top:0px"></div>
+		<div id="infoButton"></div>
 		<div id="cursor"></div>
 	</body>
 
@@ -17,10 +18,17 @@
 	<!--
 	three.js 3d library
 	-->
-	<script type="text/javascript" src="js/three.min.js"></script>
+	<!-- <script type="text/javascript" src="js/three.min.js"></script> -->
+	<script type="text/javascript" src="js/old-three.js"></script>
+	<!-- <script type="text/javascript" src="js/Projector.js"></script> -->
 	<script type="text/javascript" src="js/leap.min.js"></script>
 	<script type="text/javascript" src="js/LeapCameraControls.js"></script>
 	<script type="text/javascript" src="js/LeapObjectControls.js"></script>
+
+	<script src="js/THREEx.KeyboardState.js"></script>
+	<script src="js/THREEx.FullScreen.js"></script>
+	<script src="js/THREEx.WindowResize.js"></script>
+
 
 	<!--
 	VRControls.js acquires positional information from connected VR devices and applies the transformations to a three.js camera object.
@@ -31,11 +39,11 @@
 	VREffect.js handles stereo camera setup and rendering.
 	-->
 	<script src="js/VREffect.js"></script>
-	<script src="js/OrbitControls.js"></script>
+	<script src="js/old-OrbitControls.js"></script>
 
 	<script src="js/b3.js"></script>
 	<script>
-	initiate();
-	coordinates("data/trajectory_wrt_time.json");
+		initiate();
+		coordinates("data/trajectory_wrt_time.json");
 	</script>
 </html>
