@@ -124,7 +124,8 @@ function initiate(){
     if (index == -1) {
       cameraControls.update(frame);
     } else {
-      objectsControls[index].update(frame);
+      updateToolBox(objects[index].name);
+      //objectsControls[index].update(frame);
     };
 
     // effect.render(scene, camera);
@@ -141,9 +142,9 @@ function initiate(){
       if (index != controlsIndex && controlsIndex > -2) {
         // new object or camera to control
         if (controlsIndex > -2) {
-          if (index > -1) objects[index].material.color.setHex(0xefefef);
+          if (index > -1) objects[index].material.color.setHex(0x38758A);
           index = controlsIndex;
-          if (index > -1) objects[index].material.color.setHex(0xff0000);
+          if (index > -1) objects[index].material.color.setHex(0xe60039);
         }
       };
     }; 
@@ -201,7 +202,7 @@ function initiate(){
       var vpx = (coords[0]/cont.width())*2 - 1;
       var vpy = -(coords[1]/cont.height())*2 + 1;
       var vector = new THREE.Vector3(vpx, vpy, 0.5);
-      // projector.unprojectVector(vector, camera);
+      projector.unprojectVector(vector, camera);
       var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
       var intersects = raycaster.intersectObjects(objects);
       if (intersects.length > 0) { 
@@ -492,7 +493,7 @@ function updateTimeSeriesCoordinates(e){
   updateInfo(b3Json[timeSeriesCount][0]["ts"]);
 
   for(var i = 0; i < b3Json[timeSeriesCount][0]["positions"].length; i++){
-    var geometry = new THREE.SphereGeometry(1.5, 1.5, 5);
+    var geometry = new THREE.SphereGeometry(1.5, 5, 5);
     var material = new THREE.MeshBasicMaterial( {color: 0x38758A} );
     var object = new THREE.Mesh(geometry, material);
 

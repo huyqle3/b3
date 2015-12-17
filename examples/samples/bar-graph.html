@@ -5,7 +5,7 @@
 		<title>b3.js - example</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link href='css/style.css' rel='stylesheet' type='text/css'>
+		<link href='css/base.css' rel='stylesheet' type='text/css'>
 	</head>
 
 	<body>
@@ -22,6 +22,8 @@
 	<script type="text/javascript" src="js/leap.min.js"></script>
 	<script type="text/javascript" src="js/LeapCameraControls.js"></script>
 	<script type="text/javascript" src="js/LeapObjectControls.js"></script>
+  <script src="js/OrbitControls.js"></script>
+
 
 	<!--
 	VRControls.js acquires positional information from connected VR devices and applies the transformations to a three.js camera object.
@@ -80,6 +82,8 @@
 		Apply VR headset orientation and positional to camera.
 		*/
 		var controls = new THREE.VRControls( camera );
+    var mouseControls = new THREE.OrbitControls( camera, renderer.domElement );
+
 
 		cameraControls = new THREE.LeapCameraControls(camera);
 
@@ -160,6 +164,7 @@
 			Update VR headset position and apply to camera.
 			*/
 			controls.update();
+      mouseControls.update();
 
 			/*
 			Render the scene through the VREffect.

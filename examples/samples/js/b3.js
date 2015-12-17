@@ -494,7 +494,7 @@ function updateTimeSeriesCoordinates(e){
   updateInfo(b3Json[timeSeriesCount][0]["ts"]);
 
   for(var i = 0; i < b3Json[timeSeriesCount][0]["positions"].length; i++){
-    var geometry = new THREE.SphereGeometry(1.5, 1.5, 5);
+    var geometry = new THREE.SphereGeometry(1.5, 5, 5);
     var material = new THREE.MeshBasicMaterial( {color: 0x38758A} );
     var object = new THREE.Mesh(geometry, material);
 
