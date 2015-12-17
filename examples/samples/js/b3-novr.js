@@ -84,7 +84,7 @@ function initiate(){
   LeapCameraControls is used for LeapMotion motion controllers on the camera.
 	*/
 	mouseControls = new THREE.OrbitControls( camera, renderer.domElement );
-  controls = new THREE.VRControls( camera );
+  // controls = new THREE.VRControls( camera );
 
 	cameraControls = new THREE.LeapCameraControls(camera);
 
@@ -109,8 +109,8 @@ function initiate(){
 	/*
 	effect variable is used to generate the Virtual Reality effect
 	*/
-	effect = new THREE.VREffect( renderer );
-	effect.setSize( window.innerWidth, window.innerHeight );
+	// effect = new THREE.VREffect( renderer );
+	// effect.setSize( window.innerWidth, window.innerHeight );
 
 	/*
   Leap Motion loads with loop function.
@@ -127,7 +127,7 @@ function initiate(){
       objectsControls[index].update(frame);
     };
 
-    effect.render(scene, camera);
+    // effect.render(scene, camera);
   });
 
   // setInterval is a timer that runs changeControlsIndex every 250 milliseconds.
@@ -203,8 +203,6 @@ function initiate(){
       var vector = new THREE.Vector3(vpx, vpy, 0.5);
       // projector.unprojectVector(vector, camera);
       var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
-      raycaster.setFromCamera(vector, camera);
-
       var intersects = raycaster.intersectObjects(objects);
       if (intersects.length > 0) { 
         var i = 0;
@@ -272,7 +270,7 @@ function animate() {
   */
   // cube.rotation.y += 0.01;
   // sprite1.quaternion.copy( new THREE.Vector3(200, 200, 200) );
-  effect.render( scene, camera );
+  // effect.render( scene, camera );
   requestAnimationFrame( animate );
 
 
@@ -350,13 +348,13 @@ function update(){
   }
 
     
-  controls.update();
+  // controls.update();
   mouseControls.update();
 }
 
 function render(){
   // effect.render(scene, camera);
-  // renderer.render(scene, camera);
+  renderer.render(scene, camera);
 }
 
 function onDocumentMouseMove( event ){
