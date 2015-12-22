@@ -24,6 +24,7 @@ Visit localhost:8000 to see some of the examples. Try localhost:8000/custom.html
 It automatically detects Oculus Rift if you're using a VR build of Mozilla Firefox or Google Chrome.
 
 MozVR: http://mozvr.com/
+
 Google Chromium with VR: https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ
 
 ### Generate graphs from JSON or CSV
