@@ -1,31 +1,47 @@
 /*
-Loading b3.js will create a Three.js camera and scene for the project.
-The project will have an empty scene and full sized camera.
-*/
-var scene = new THREE.Scene();
+ * https://github.com/huyle333/b3
+ */
+
+// Global variables for the full screen width and height.
 var SCREEN_WIDTH = window.innerWidth;
 var SCREEN_HEIGHT = window.innerHeight;
+
+// Global variable for 45 degrees perspective view.
 var VIEW_ANGLE = 45;
 var ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 var NEAR = 0.1;
 var FAR = 20000;
+
+// Add a camera to the scene.
+var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 scene.add(camera);
 
+// Array that holds all the objects generated on the scene.
 var objects = [];
 var objectControls = [];
 
+// b3Json holds the contents of the ingested JSON file.
 var b3Json;
+// timeSeriesCount is a variable that stores the increments of the time series graph.
 var timeSeriesCount = 0;
 
+// effect is used for VR.
 var effect;
 var renderer;
-var controls;
-var mouseControls;
 
+// vrControls is used for VR and orbitMouseControls is used for the mouse.
+var vrControls;
+var orbitMouseControls;
+
+// projector is used to project the sprite toolbox.
 var projector;
+// mouse controls the placement of the mouse at origin.
 var mouse = { x: 0, y: 0 };
+// intersect checks to see if mouse intersected with an object.
 var INTERSECTED;
+
+// sprite, canvas, context, texture control the content of the projected sprite toolbox.
 var sprite1;
 var canvas1, context1, texture1;
 
@@ -33,7 +49,7 @@ function initiate(){
   /*
   Initiate function creates the 3D environment with a world coordinate grid.
   */
-  var cameraControls;
+  var leapCameraControls;
   var coords1;
   var coords2;
   var coords3;
@@ -80,37 +96,37 @@ function initiate(){
   scene.add(coords);
 
 	/*
-	OrbitControls is used for mouse coontrols on the Camera.
+	OrbitControls is used for mouse vrControls on the Camera.
   LeapCameraControls is used for LeapMotion motion controllers on the camera.
 	*/
-	mouseControls = new THREE.OrbitControls( camera, renderer.domElement );
-  // controls = new THREE.VRControls( camera );
+	orbitMouseControls = new THREE.OrbitControls( camera, renderer.domElement );
+  vrControls = new THREE.VRControls( camera );
 
-	cameraControls = new THREE.LeapCameraControls(camera);
+	leapCameraControls = new THREE.LeapCameraControls(camera);
 
-  cameraControls.rotateEnabled  = true;
-  cameraControls.rotateSpeed    = 3;
-  cameraControls.rotateHands    = 1;
-  cameraControls.rotateFingers  = [2, 3];
+  leapCameraControls.rotateEnabled  = true;
+  leapCameraControls.rotateSpeed    = 3;
+  leapCameraControls.rotateHands    = 1;
+  leapCameraControls.rotateFingers  = [2, 3];
     
-  cameraControls.zoomEnabled    = true;
-  cameraControls.zoomSpeed      = 6;
-  cameraControls.zoomHands      = 1;
-  cameraControls.zoomFingers    = [4, 5];
-  cameraControls.zoomMin        = 50;
-  cameraControls.zoomMax        = 2000;
+  leapCameraControls.zoomEnabled    = true;
+  leapCameraControls.zoomSpeed      = 6;
+  leapCameraControls.zoomHands      = 1;
+  leapCameraControls.zoomFingers    = [4, 5];
+  leapCameraControls.zoomMin        = 50;
+  leapCameraControls.zoomMax        = 2000;
     
-  cameraControls.panEnabled     = true;
-  cameraControls.panSpeed       = 2;
-  cameraControls.panHands       = 2;
-  cameraControls.panFingers     = [6, 12];
-  cameraControls.panRightHanded = false; // for left-handed people
+  leapCameraControls.panEnabled     = true;
+  leapCameraControls.panSpeed       = 2;
+  leapCameraControls.panHands       = 2;
+  leapCameraControls.panFingers     = [6, 12];
+  leapCameraControls.panRightHanded = false; // for left-handed people
 
 	/*
 	effect variable is used to generate the Virtual Reality effect
 	*/
-	// effect = new THREE.VREffect( renderer );
-	// effect.setSize( window.innerWidth, window.innerHeight );
+	effect = new THREE.VREffect( renderer );
+	effect.setSize( window.innerWidth, window.innerHeight );
 
 	/*
   Leap Motion loads with loop function.
@@ -122,13 +138,12 @@ function initiate(){
     // Set correct camera control.
     controlsIndex = focusObject(frame);
     if (index == -1) {
-      cameraControls.update(frame);
+      leapCameraControls.update(frame);
     } else {
-      updateToolBox(objects[index].name);
-      //objectsControls[index].update(frame);
+      objectsControls[index].update(frame);
     };
 
-    // effect.render(scene, camera);
+    effect.render(scene, camera);
   });
 
   // setInterval is a timer that runs changeControlsIndex every 250 milliseconds.
@@ -142,9 +157,9 @@ function initiate(){
       if (index != controlsIndex && controlsIndex > -2) {
         // new object or camera to control
         if (controlsIndex > -2) {
-          if (index > -1) objects[index].material.color.setHex(0x38758A);
+          if (index > -1) objects[index].material.color.setHex(0xefefef);
           index = controlsIndex;
-          if (index > -1) objects[index].material.color.setHex(0xe60039);
+          if (index > -1) objects[index].material.color.setHex(0xff0000);
         }
       };
     }; 
@@ -202,8 +217,10 @@ function initiate(){
       var vpx = (coords[0]/cont.width())*2 - 1;
       var vpy = -(coords[1]/cont.height())*2 + 1;
       var vector = new THREE.Vector3(vpx, vpy, 0.5);
-      projector.unprojectVector(vector, camera);
+      // projector.unprojectVector(vector, camera);
       var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+      raycaster.setFromCamera(vector, camera);
+
       var intersects = raycaster.intersectObjects(objects);
       if (intersects.length > 0) { 
         var i = 0;
@@ -221,17 +238,13 @@ function initiate(){
   /*
   Fullscreen and resize window
   */
-  /*
   THREEx.WindowResize(renderer, camera, effect);
   THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
-  */
 
   // initialize object to perform world/screen calculations
   projector = new THREE.Projector();
   // when the mouse moves, call the given function
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-
-  /////// draw text on canvas /////////
 
   // create a canvas element
   canvas1 = document.createElement('canvas');
@@ -244,8 +257,7 @@ function initiate(){
   texture1 = new THREE.Texture(canvas1) 
   texture1.needsUpdate = true;
 
-  ////////////////////////////////////////
-  
+  // create the sprite that renders on the canvas object  
   var spriteMaterial = new THREE.SpriteMaterial( { map: texture1} );
   
   sprite1 = new THREE.Sprite( spriteMaterial );
@@ -253,7 +265,6 @@ function initiate(){
   sprite1.position.set(50, 50, 0 );
   // scene.add( sprite1 ); 
 
-  //////////////////////////////////////////
   window.addEventListener("keydown", updateTimeSeriesCoordinates, false);
 
   /*
@@ -262,29 +273,24 @@ function initiate(){
   animate();
 }
 
- /*
-  Request animation frame loop function
-  */
+/*
+ * Request animation frame loop function
+ */
 function animate() {
   /*
-  Apply rotation to cube mesh
-  */
-  // cube.rotation.y += 0.01;
-  // sprite1.quaternion.copy( new THREE.Vector3(200, 200, 200) );
-  // effect.render( scene, camera );
-  requestAnimationFrame( animate );
-
-
-  /*
-  Use mouse controls and update VR headset position and apply to camera.
-  */
+   * Use mouse vrControls and update VR headset position and apply to camera.
+   */
   render();
+  requestAnimationFrame( animate );
   update();
 }
 
+/*
+ * Updates the location of the mouse to check if mouse touches an object.
+ */
 function update(){
   // create a Ray with origin at the mouse position
-  //   and direction into the scene (camera direction)
+  // and direction into the scene (camera direction)
   var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
   // projector.unprojectVector( vector, camera );
   // var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
@@ -295,7 +301,7 @@ function update(){
   var intersects = ray.intersectObjects( scene.children );
 
   // INTERSECTED = the object in the scene currently closest to the camera 
-  //    and intersected by the Ray projected from the mouse position  
+  // and intersected by the Ray projected from the mouse position  
   
   // if there is one (or more) intersections
   if ( intersects.length > 0 )
@@ -349,15 +355,22 @@ function update(){
   }
 
     
-  // controls.update();
-  mouseControls.update();
+  vrControls.update();
+  // orbitMouseControls.update();
 }
 
+
+/*
+ * Renders the VR effect onto screen.
+ */
 function render(){
-  // effect.render(scene, camera);
-  renderer.render(scene, camera);
+  effect.render(scene, camera);
+  // renderer.render(scene, camera);
 }
 
+/*
+ * Update mouse movement when mouse moves.
+ */
 function onDocumentMouseMove( event ){
   // the following line would stop any other event handler from firing
   // (such as the mouse's TrackballControls)
@@ -372,6 +385,9 @@ function onDocumentMouseMove( event ){
   mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 }
 
+/*
+ * Grabs JSON coordinates from file ingested.
+ */
 function coordinates(jsonFile){
   $.getJSON(jsonFile, function(json) {
     b3Json = json;
@@ -410,8 +426,8 @@ function coordinates(jsonFile){
 
       object.receiveShadow = true;
 
-      scene.add( object );
-      scene.add( line );
+      scene.add(object);
+      scene.add(line);
       objects.push(object);
       objects.push(line);
     }
@@ -432,7 +448,7 @@ function coordinates(jsonFile){
 
 		object.receiveShadow = true;
 
-		// leap object controls
+		// leap object vrControls
 		var objectControls = new THREE.LeapObjectControls(camera, object);
 
 		objectControls.rotateEnabled  = true;
@@ -462,18 +478,21 @@ function coordinates(jsonFile){
   */
 }
 
+/*
+ * Helper function that removes objects not in the current position of JSON file index.
+ */
 function removeObjects(){
   console.log(objects);
   for( var i = objects.length - 1; i >= 0; i--) {
     scene.remove(objects[i]);
-    // animate();
   }
   objects = [];
 }
 
+/*
+ * Helper function to update time series graph.
+ */
 function updateTimeSeriesCoordinates(e){
-  console.log("Triggered");
-
   if (e.keyCode == "37") {
     timeSeriesCount--;
   }else if(e.keyCode == "39"){
@@ -523,6 +542,164 @@ function updateTimeSeriesCoordinates(e){
   }
 }
 
+function randomizeBar(){
+  // rectangles
+  for (var i = 0; i < 20; i ++) {
+    var geometry = new THREE.CubeGeometry(5, Math.random()*200, 5);
+
+    var material = new THREE.MeshNormalMaterial({color: 0x38758A});
+
+    var object = new THREE.Mesh(geometry, material);
+    object.position.x = Math.random()* 125;
+    object.position.y = 0;
+    object.position.z = Math.random()* 125;
+
+    object.receiveShadow = true;
+
+    // leap object controls
+    /*
+    var objectControls = new THREE.LeapObjectControls(camera, object);
+
+    objectControls.rotateEnabled  = true;
+    objectControls.rotateSpeed    = 3;
+    objectControls.rotateHands    = 1;
+    objectControls.rotateFingers  = [2, 3];
+    
+    objectControls.scaleEnabled   = true;
+    objectControls.scaleSpeed     = 3;
+    objectControls.scaleHands     = 1;
+    objectControls.scaleFingers   = [4, 5];
+    
+    objectControls.panEnabled     = true;
+    objectControls.panSpeed       = 3;
+    objectControls.panHands       = 2;
+    objectControls.panFingers     = [6, 12];
+    objectControls.panRightHanded = false; // for left-handed person
+    */
+
+    /*
+    Add cube mesh to your three.js scene
+    */
+    scene.add(object);
+    objects.push(object);
+    // objectsControls.push(objectControls);
+  }
+}
+
+function randomizeScatter(){
+  // spheres
+  for (var i = 0; i < 20; i ++) {
+    var geometry = new THREE.SphereGeometry(3, 10, 10);
+
+    var material = new THREE.MeshNormalMaterial( {color: 0x38758A} );
+
+    var object = new THREE.Mesh(geometry, material);
+    object.position.x = Math.random()* 125;
+    object.position.y = Math.random()* 125;
+    object.position.z = Math.random()* 125;
+
+    object.receiveShadow = true;
+
+    // leap object controls
+    /*
+    var objectControls = new THREE.LeapObjectControls(camera, object);
+
+    objectControls.rotateEnabled  = true;
+    objectControls.rotateSpeed    = 3;
+    objectControls.rotateHands    = 1;
+    objectControls.rotateFingers  = [2, 3];
+    
+    objectControls.scaleEnabled   = true;
+    objectControls.scaleSpeed     = 3;
+    objectControls.scaleHands     = 1;
+    objectControls.scaleFingers   = [4, 5];
+    
+    objectControls.panEnabled     = true;
+    objectControls.panSpeed       = 3;
+    objectControls.panHands       = 2;
+    objectControls.panFingers     = [6, 12];
+    objectControls.panRightHanded = false; // for left-handed person
+    */
+    /*
+    Add sphere mesh to your three.js scene
+    */
+    scene.add( object );
+    objects.push(object);
+    // objectsControls.push(objectControls);
+  }
+}
+
+function surfacePlot(){
+  initGraph();
+  
+  function initGraph(){
+    data = initData();
+    var geometry = new THREE.Geometry();
+    var colors = [];
+
+    var width = data.length, height = data[0].length;
+      data.forEach(function(col){
+        col.forEach(function(val){
+          geometry.vertices.push(new THREE.Vector3(val.x,val.y,val.z))
+          colors.push(getColor(2.5,0,val.z));
+        });
+    });
+
+    var offset = function(x,y){
+      return x*width+y;
+    }
+    
+    for(var x=0;x<width-1;x++){
+      for(var y=0;y<height-1;y++){
+        var vec0 = new THREE.Vector3(), vec1 = new THREE.Vector3(), n_vec = new THREE.Vector3();
+        // one of two triangle polygons in one rectangle
+        vec0.subVectors(geometry.vertices[offset(x,y)],geometry.vertices[offset(x+1,y)]);
+        vec1.subVectors(geometry.vertices[offset(x,y)],geometry.vertices[offset(x,y+1)]); 
+        n_vec.crossVectors(vec0,vec1).normalize();
+        geometry.faces.push(new THREE.Face3(offset(x,y),offset(x+1,y),offset(x,y+1), n_vec, [colors[offset(x,y)],colors[offset(x+1,y)],colors[offset(x,y+1)]]));
+        geometry.faces.push(new THREE.Face3(offset(x,y),offset(x,y+1),offset(x+1,y), n_vec.negate(), [colors[offset(x,y)],colors[offset(x,y+1)],colors[offset(x+1,y)]]));
+        // the other one
+        vec0.subVectors(geometry.vertices[offset(x+1,y)],geometry.vertices[offset(x+1,y+1)]);
+        vec1.subVectors(geometry.vertices[offset(x,y+1)],geometry.vertices[offset(x+1,y+1)]); 
+        n_vec.crossVectors(vec0,vec1).normalize();
+        geometry.faces.push(new THREE.Face3(offset(x+1,y),offset(x+1,y+1),offset(x,y+1), n_vec, [colors[offset(x+1,y)],colors[offset(x+1,y+1)],colors[offset(x,y+1)]]));
+        geometry.faces.push(new THREE.Face3(offset(x+1,y),offset(x,y+1),offset(x+1,y+1), n_vec.negate(), [colors[offset(x+1,y)],colors[offset(x,y+1)],colors[offset(x+1,y+1)]]));
+      }
+    }
+
+    var material = new THREE.MeshNormalMaterial( {color: 0x38758A} );
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+  }
+
+  function initData(){
+    var BIGIN=-10, END=10;
+    var data = new Array();
+    for(var x=BIGIN;x<END;x++){
+      var row = [];
+      for(var y=BIGIN;y<END;y++){
+        z = 2.5*(Math.cos(Math.sqrt(x*x+y*y))+1);
+        row.push({x: y, y: z, z: x});
+      }
+      data.push(row);
+    }
+    return data;
+  }
+
+  function getColor(max,min,val){
+    var MIN_L=40,MAX_L=100;
+    var color = new THREE.Color();
+    var h = 0/240;
+    var s = 80/240;
+    var l = (((MAX_L-MIN_L)/(max-min))*val)/240;
+    color.setHSL(h,s,l);
+    return color;
+  }
+}
+
+/*
+ * Helper function to update current time on timeseries.
+ */
 function updateInfo(currentTime){
   $("#infoButton")
        .text(currentTime)
@@ -534,9 +711,12 @@ function updateInfo(currentTime){
   }); 
 }
 
-function updateToolBox(currentTime){
+/*
+ * Helper function to update metadata on info.
+ */
+function updateToolBox(info){
   $("#toolBox")
-       .text(currentTime)
+       .text(info)
   .css(
   { "z-index":"2",
     "font-size": "20px",

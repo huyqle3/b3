@@ -1,31 +1,47 @@
 /*
-Loading b3.js will create a Three.js camera and scene for the project.
-The project will have an empty scene and full sized camera.
-*/
-var scene = new THREE.Scene();
+ * https://github.com/huyle333/b3
+ */
+
+// Global variables for the full screen width and height.
 var SCREEN_WIDTH = window.innerWidth;
 var SCREEN_HEIGHT = window.innerHeight;
+
+// Global variable for 45 degrees perspective view.
 var VIEW_ANGLE = 45;
 var ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 var NEAR = 0.1;
 var FAR = 20000;
+
+// Add a camera to the scene.
+var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 scene.add(camera);
 
+// Array that holds all the objects generated on the scene.
 var objects = [];
 var objectControls = [];
 
+// b3Json holds the contents of the ingested JSON file.
 var b3Json;
+// timeSeriesCount is a variable that stores the increments of the time series graph.
 var timeSeriesCount = 0;
 
+// effect is used for VR.
 var effect;
 var renderer;
-var controls;
-var mouseControls;
 
+// vrControls is used for VR and orbitMouseControls is used for the mouse.
+var vrControls;
+var orbitMouseControls;
+
+// projector is used to project the sprite toolbox.
 var projector;
+// mouse controls the placement of the mouse at origin.
 var mouse = { x: 0, y: 0 };
+// intersect checks to see if mouse intersected with an object.
 var INTERSECTED;
+
+// sprite, canvas, context, texture control the content of the projected sprite toolbox.
 var sprite1;
 var canvas1, context1, texture1;
 
@@ -33,7 +49,7 @@ function initiate(){
   /*
   Initiate function creates the 3D environment with a world coordinate grid.
   */
-  var cameraControls;
+  var leapCameraControls;
   var coords1;
   var coords2;
   var coords3;
@@ -46,26 +62,26 @@ function initiate(){
   */
   renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-	renderer.setClearColor(0xffffff, 1);
+  renderer.setClearColor(0xffffff, 1);
 
-	/*
-	Append the canvas element created by the renderer to document body element.
-	*/
-	container = document.getElementById( 'b3' );
+  /*
+  Append the canvas element created by the renderer to document body element.
+  */
+  container = document.getElementById( 'b3' );
   container.appendChild( renderer.domElement );
 
-	/*
-	Set the x, y, z coordinates of the camera.
-	*/
-	camera.position.x = 200;
+  /*
+  Set the x, y, z coordinates of the camera.
+  */
+  camera.position.x = 200;
   camera.position.y = 200;
   camera.position.z = 200;
-   	
+    
   /*
   Origin is set to (0, 0, 0), and the camera will look at the origin when page is loaded.
   */
-	var origin = new THREE.Vector3(0, 0, 0);
-	camera.lookAt(origin);
+  var origin = new THREE.Vector3(0, 0, 0);
+  camera.lookAt(origin);
 
   /*
   World coordinate system act in the place of the graph indicator.
@@ -79,40 +95,40 @@ function initiate(){
   var coords = new THREE.Line(lineGeometry, lineMaterial);
   scene.add(coords);
 
-	/*
-	OrbitControls is used for mouse coontrols on the Camera.
+  /*
+  OrbitControls is used for mouse vrControls on the Camera.
   LeapCameraControls is used for LeapMotion motion controllers on the camera.
-	*/
-	mouseControls = new THREE.OrbitControls( camera, renderer.domElement );
-  controls = new THREE.VRControls( camera );
+  */
+  orbitMouseControls = new THREE.OrbitControls( camera, renderer.domElement );
+  // vrControls = new THREE.VRControls( camera );
 
-	cameraControls = new THREE.LeapCameraControls(camera);
+  leapCameraControls = new THREE.LeapCameraControls(camera);
 
-  cameraControls.rotateEnabled  = true;
-  cameraControls.rotateSpeed    = 3;
-  cameraControls.rotateHands    = 1;
-  cameraControls.rotateFingers  = [2, 3];
+  leapCameraControls.rotateEnabled  = true;
+  leapCameraControls.rotateSpeed    = 3;
+  leapCameraControls.rotateHands    = 1;
+  leapCameraControls.rotateFingers  = [2, 3];
     
-  cameraControls.zoomEnabled    = true;
-  cameraControls.zoomSpeed      = 6;
-  cameraControls.zoomHands      = 1;
-  cameraControls.zoomFingers    = [4, 5];
-  cameraControls.zoomMin        = 50;
-  cameraControls.zoomMax        = 2000;
+  leapCameraControls.zoomEnabled    = true;
+  leapCameraControls.zoomSpeed      = 6;
+  leapCameraControls.zoomHands      = 1;
+  leapCameraControls.zoomFingers    = [4, 5];
+  leapCameraControls.zoomMin        = 50;
+  leapCameraControls.zoomMax        = 2000;
     
-  cameraControls.panEnabled     = true;
-  cameraControls.panSpeed       = 2;
-  cameraControls.panHands       = 2;
-  cameraControls.panFingers     = [6, 12];
-  cameraControls.panRightHanded = false; // for left-handed people
+  leapCameraControls.panEnabled     = true;
+  leapCameraControls.panSpeed       = 2;
+  leapCameraControls.panHands       = 2;
+  leapCameraControls.panFingers     = [6, 12];
+  leapCameraControls.panRightHanded = false; // for left-handed people
 
-	/*
-	effect variable is used to generate the Virtual Reality effect
-	*/
-	effect = new THREE.VREffect( renderer );
-	effect.setSize( window.innerWidth, window.innerHeight );
+  /*
+  effect variable is used to generate the Virtual Reality effect
+  */
+  // effect = new THREE.VREffect( renderer );
+  // effect.setSize( window.innerWidth, window.innerHeight );
 
-	/*
+  /*
   Leap Motion loads with loop function.
   */
   Leap.loop(function(frame) {
@@ -122,12 +138,12 @@ function initiate(){
     // Set correct camera control.
     controlsIndex = focusObject(frame);
     if (index == -1) {
-      cameraControls.update(frame);
+      leapCameraControls.update(frame);
     } else {
       objectsControls[index].update(frame);
     };
 
-    effect.render(scene, camera);
+    // effect.render(scene, camera);
   });
 
   // setInterval is a timer that runs changeControlsIndex every 250 milliseconds.
@@ -222,17 +238,13 @@ function initiate(){
   /*
   Fullscreen and resize window
   */
-  /*
   THREEx.WindowResize(renderer, camera, effect);
   THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
-  */
 
   // initialize object to perform world/screen calculations
   projector = new THREE.Projector();
   // when the mouse moves, call the given function
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-
-  /////// draw text on canvas /////////
 
   // create a canvas element
   canvas1 = document.createElement('canvas');
@@ -245,8 +257,7 @@ function initiate(){
   texture1 = new THREE.Texture(canvas1) 
   texture1.needsUpdate = true;
 
-  ////////////////////////////////////////
-  
+  // create the sprite that renders on the canvas object  
   var spriteMaterial = new THREE.SpriteMaterial( { map: texture1} );
   
   sprite1 = new THREE.Sprite( spriteMaterial );
@@ -254,7 +265,6 @@ function initiate(){
   sprite1.position.set(50, 50, 0 );
   // scene.add( sprite1 ); 
 
-  //////////////////////////////////////////
   window.addEventListener("keydown", updateTimeSeriesCoordinates, false);
 
   /*
@@ -263,29 +273,24 @@ function initiate(){
   animate();
 }
 
- /*
-  Request animation frame loop function
-  */
+/*
+ * Request animation frame loop function
+ */
 function animate() {
   /*
-  Apply rotation to cube mesh
-  */
-  // cube.rotation.y += 0.01;
-  // sprite1.quaternion.copy( new THREE.Vector3(200, 200, 200) );
-  effect.render( scene, camera );
-  requestAnimationFrame( animate );
-
-
-  /*
-  Use mouse controls and update VR headset position and apply to camera.
-  */
+   * Use mouse vrControls and update VR headset position and apply to camera.
+   */
   render();
+  requestAnimationFrame( animate );
   update();
 }
 
+/*
+ * Updates the location of the mouse to check if mouse touches an object.
+ */
 function update(){
   // create a Ray with origin at the mouse position
-  //   and direction into the scene (camera direction)
+  // and direction into the scene (camera direction)
   var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
   // projector.unprojectVector( vector, camera );
   // var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
@@ -296,7 +301,7 @@ function update(){
   var intersects = ray.intersectObjects( scene.children );
 
   // INTERSECTED = the object in the scene currently closest to the camera 
-  //    and intersected by the Ray projected from the mouse position  
+  // and intersected by the Ray projected from the mouse position  
   
   // if there is one (or more) intersections
   if ( intersects.length > 0 )
@@ -350,15 +355,22 @@ function update(){
   }
 
     
-  controls.update();
-  mouseControls.update();
+  // vrControls.update();
+  orbitMouseControls.update();
 }
 
+
+/*
+ * Renders the VR effect onto screen.
+ */
 function render(){
   // effect.render(scene, camera);
-  // renderer.render(scene, camera);
+  renderer.render(scene, camera);
 }
 
+/*
+ * Update mouse movement when mouse moves.
+ */
 function onDocumentMouseMove( event ){
   // the following line would stop any other event handler from firing
   // (such as the mouse's TrackballControls)
@@ -373,6 +385,9 @@ function onDocumentMouseMove( event ){
   mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 }
 
+/*
+ * Grabs JSON coordinates from file ingested.
+ */
 function coordinates(jsonFile){
   $.getJSON(jsonFile, function(json) {
     b3Json = json;
@@ -419,62 +434,65 @@ function coordinates(jsonFile){
   });
 
   /*
-	for (var i = 0; i < 20; i ++) {
+  for (var i = 0; i < 20; i ++) {
     var objects = [], objectsControls = [];
 
-		var geometry = new THREE.SphereGeometry(3, 10, 10);
+    var geometry = new THREE.SphereGeometry(3, 10, 10);
 
-		var material = new THREE.MeshNormalMaterial( {color: 0x38758A} );
+    var material = new THREE.MeshNormalMaterial( {color: 0x38758A} );
 
-		var object = new THREE.Mesh(geometry, material);
-		object.position.x = Math.random()* 125;
-		object.position.y = Math.random()* 125;
-		object.position.z = Math.random()* 125;
+    var object = new THREE.Mesh(geometry, material);
+    object.position.x = Math.random()* 125;
+    object.position.y = Math.random()* 125;
+    object.position.z = Math.random()* 125;
 
-		object.receiveShadow = true;
+    object.receiveShadow = true;
 
-		// leap object controls
-		var objectControls = new THREE.LeapObjectControls(camera, object);
+    // leap object vrControls
+    var objectControls = new THREE.LeapObjectControls(camera, object);
 
-		objectControls.rotateEnabled  = true;
-		objectControls.rotateSpeed    = 3;
-		objectControls.rotateHands    = 1;
-		objectControls.rotateFingers  = [2, 3];
+    objectControls.rotateEnabled  = true;
+    objectControls.rotateSpeed    = 3;
+    objectControls.rotateHands    = 1;
+    objectControls.rotateFingers  = [2, 3];
 
-		objectControls.scaleEnabled   = true;
-		objectControls.scaleSpeed     = 3;
-		objectControls.scaleHands     = 1;
-		objectControls.scaleFingers   = [4, 5];
+    objectControls.scaleEnabled   = true;
+    objectControls.scaleSpeed     = 3;
+    objectControls.scaleHands     = 1;
+    objectControls.scaleFingers   = [4, 5];
 
-		objectControls.panEnabled     = true;
-		objectControls.panSpeed       = 3;
-		objectControls.panHands       = 2;
-		objectControls.panFingers     = [6, 12];
-		objectControls.panRightHanded = false; // for left-handed person
+    objectControls.panEnabled     = true;
+    objectControls.panSpeed       = 3;
+    objectControls.panHands       = 2;
+    objectControls.panFingers     = [6, 12];
+    objectControls.panRightHanded = false; // for left-handed person
 
-		/*
-		Add cube mesh to your three.js scene
-		*/
     /*
-		scene.add( object );
-		objects.push(object);
-		objectsControls.push(objectControls);
+    Add cube mesh to your three.js scene
+    */
+    /*
+    scene.add( object );
+    objects.push(object);
+    objectsControls.push(objectControls);
   }
   */
 }
 
+/*
+ * Helper function that removes objects not in the current position of JSON file index.
+ */
 function removeObjects(){
   console.log(objects);
   for( var i = objects.length - 1; i >= 0; i--) {
     scene.remove(objects[i]);
-    // animate();
   }
   objects = [];
 }
 
+/*
+ * Helper function to update time series graph.
+ */
 function updateTimeSeriesCoordinates(e){
-  console.log("Triggered");
-
   if (e.keyCode == "37") {
     timeSeriesCount--;
   }else if(e.keyCode == "39"){
@@ -524,6 +542,9 @@ function updateTimeSeriesCoordinates(e){
   }
 }
 
+/*
+ * Helper function to update current time on timeseries.
+ */
 function updateInfo(currentTime){
   $("#infoButton")
        .text(currentTime)
@@ -535,9 +556,12 @@ function updateInfo(currentTime){
   }); 
 }
 
-function updateToolBox(currentTime){
+/*
+ * Helper function to update metadata on info.
+ */
+function updateToolBox(info){
   $("#toolBox")
-       .text(currentTime)
+       .text(info)
   .css(
   { "z-index":"2",
     "font-size": "20px",

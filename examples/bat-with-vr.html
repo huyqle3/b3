@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>b3.js - example</title>
+		<title>b3 - bat no VR</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link href='css/base.css' rel='stylesheet' type='text/css'>
@@ -16,29 +16,33 @@
 
 	<script type="text/javascript" src="js/Detector.js"></script>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<!--
-	three.js 3d library
-	-->
+	
+	<!-- three.js 3d library -->
 	<script type="text/javascript" src="js/three.min.js"></script>
-	<!-- <script type="text/javascript" src="js/old-three.js"></script> -->
 	<script type="text/javascript" src="js/Projector.js"></script>
+
+	<!-- Leap Motion -->
 	<script type="text/javascript" src="js/leap.min.js"></script>
 	<script type="text/javascript" src="js/LeapCameraControls.js"></script>
 	<script type="text/javascript" src="js/LeapObjectControls.js"></script>
 
-	<!--
-	VRControls.js acquires positional information from connected VR devices and applies the transformations to a three.js camera object.
-	 -->
+	<!-- VRControls.js acquires positional information from connected VR devices and applies the transformations to a three.js camera object. -->
 	<script src="js/VRControls.js"></script>
-
-	<!--
-	VREffect.js handles stereo camera setup and rendering.
-	-->
+	<!-- VREffect.js handles stereo camera setup and rendering. -->
 	<script src="js/VREffect.js"></script>
 
+	<!-- Mouse controls -->
 	<script src="js/OrbitControls.js"></script>
 
+	<!-- Window settings -->
+	<script src="js/THREEx.KeyboardState.js"></script>
+ 	<script src="js/THREEx.FullScreen.js"></script>
+ 	<script src="js/THREEx.WindowResize.js"></script>
+
+ 	<!-- b3 script -->
 	<script src="js/b3.js"></script>
+
+	<!-- initiate and fill with coordinates -->
 	<script>
 		initiate();
 		coordinates("data/trajectory_wrt_time.json");
