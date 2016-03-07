@@ -1,4 +1,4 @@
-b3
+b3 [![Build Status](https://travis-ci.org/huyle333/b3.svg?branch=master)]
 ==
 b3 is an Oculus Rift and Leap Motion demo that enables VR motion controlled charts and graphs within web applications. 
 
@@ -10,7 +10,7 @@ b3 is an Oculus Rift and Leap Motion demo that enables VR motion controlled char
 ### Web Server
 b3.js requires a webserver. You can run b3 examples provided in the git repo:
 ```
-cd b3/examples/samples
+cd b3/examples/
 python -m SimpleHTTPServer
 ```
 
