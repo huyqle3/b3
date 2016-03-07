@@ -1,44 +1,40 @@
-# b3
-A new way of graphing libraries
+b3
+==
+b3 is an Oculus Rift and Leap Motion demo that enables VR motion controlled charts and graphs within web applications. 
 
 ### Instructions
-1. Download git repo
-2. b3.js requires a web server
-3. Generate graphs from JSON or CSV
+1. Web Server
+2. Generating Graphs from Data
+3. Dependency
 
-### Download git repo
-
-```
-git clone https://github.com/huyle333/b3
-```
-
-### b3.js requires a web server
-
+### Web Server
+b3.js requires a webserver. You can run b3 examples provided in the git repo:
 ```
 cd b3/examples/samples
 python -m SimpleHTTPServer
 ```
 
-Visit localhost:8000 to see some of the examples. Try localhost:8000/custom.html.
+After initiating the webserver inside examples/, go to localhost:8000/index.html to see the examples.
 
-It automatically detects Oculus Rift if you're using a VR build of Mozilla Firefox or Google Chrome.
+### Generate Graphs from Data
+b3.js suppports JSON and CSV data. For now, follow the structure examples/bat-with-vr.html contains.
 
-MozVR: http://mozvr.com/
-
-Google Chromium with VR: https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ
-
-### Generate graphs from JSON or CSV
-
-For now, follow the structure examples/bat-with-vr.html contains.
-
-Two main functions direct b3.js. b3.js currently has a lot of dependencies that I'm experimenting around with.
-Look at bat-with-vr.html to see what b3.js depends on.
+To use b3.js, you use two main functions, initiate() and coordinates(fileName, typeOfGraph). b3.js currently has a lot of dependencies that I'm experimenting with to create the proof of concept. Look at examples/bat-with-vr.html, which contains the list of file dependencies.
 
 ```
 initiate();
-coordinates(fileName);
+coordinates(fileName, typeOfGraph);
 ```
 
+### Type of Graphs
+The type of graphs supported are bar, scatter, and surface plots. Input within coordinates(fileName, "bar") or (fileName, "scatter") or (fileName, "surface").
 
+### Dependency
+You'll need a VR ready browser like MozVR or Google Chromium VR enabled build. Download either web browser at the following links. Optionally, you'll also need to setup the Leap Motion controller if you want to use the Leap Motion.
 
++ MozVR: [http://mozvr.com/](http://mozvr.com/)
++ Google Chromium with VR: [https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ](https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ)
++ LeapMotion: https://www.leapmotion.com/setup 
 
+### License
+MIT
