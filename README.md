@@ -21,13 +21,13 @@ b3.js suppports JSON and CSV data. For now, follow the structure examples/bat-wi
 
 To use b3.js, you use two main functions, initiate() and coordinates(fileName, typeOfGraph). b3.js currently has a lot of dependencies that I'm experimenting with to create the proof of concept. Look at examples/bat-with-vr.html, which contains the list of file dependencies.
 
+#### Type of Graphs
+The type of graphs supported are bar, scatter, and surface plots. Input within coordinates(fileName, "bar") or (fileName, "scatter") or (fileName, "surface").
+
 ```
 initiate();
 coordinates(fileName, typeOfGraph);
 ```
-
-### Type of Graphs
-The type of graphs supported are bar, scatter, and surface plots. Input within coordinates(fileName, "bar") or (fileName, "scatter") or (fileName, "surface").
 
 ### Dependency
 You'll need a VR ready browser like MozVR or Google Chromium VR enabled build. Download either web browser at the following links. Optionally, you'll also need to setup the Leap Motion controller if you want to use the Leap Motion.
