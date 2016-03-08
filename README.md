@@ -30,11 +30,24 @@ coordinates(fileName, typeOfGraph);
 ```
 
 ### Dependency
-You'll need a VR ready browser like MozVR or Google Chromium VR enabled build. Download either web browser at the following links. Optionally, you'll also need to setup the Leap Motion controller if you want to use the Leap Motion.
+You'll need a VR ready browser like MozVR or Google Chromium VR enabled build. Download either web browser at the following links. Optionally, you'll also need to setup the Leap Motion controller if you want to use motion controls.
 
 + MozVR: [http://mozvr.com/](http://mozvr.com/)
 + Google Chromium with VR: [https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ](https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ)
-+ LeapMotion: https://www.leapmotion.com/setup 
++ Oculus Rift Runtime: [https://developer.oculus.com/downloads/](https://developer.oculus.com/downloads/)
++ LeapMotion Driver: [https://www.leapmotion.com/setup](https://www.leapmotion.com/setup )
+
+### Device Support and Drivers
+The latest Oculus Rift runtimes 0.7.0.0-beta and above do not currently work with laptops unfortunately.
+
+My configurations are:
+```
+Oculus Runtime: 0.6.0.1-beta
+Leap Motion: 2.3.1
+OS: Windows 10
+```
+
+For Windows 10, using Oculus Runtime, 0.6.0.1-beta, requires [specific instructions](https://www.reddit.com/comments/3f8g9d) to make it work.
 
 ### License
 MIT
