@@ -38,16 +38,14 @@ You'll need a VR ready browser like MozVR or Google Chromium VR enabled build. D
 + LeapMotion Driver: [https://www.leapmotion.com/setup](https://www.leapmotion.com/setup )
 
 ### Device Support and Drivers
-The latest Oculus Rift runtimes 0.7.0.0-beta and above do not currently work with laptops unfortunately.
+The latest Oculus Rift runtimes 0.7.0.0-beta and above do not currently work with laptops unfortunately. And don't use Windows 10 with Oculus Rift runtimes, 0.6.0.1 and below.
 
 My configurations are:
 ```
 Oculus Runtime: 0.6.0.1-beta
 Leap Motion: 2.3.1
-OS: Windows 10
+OS: Windows 8.1
 ```
-
-For Windows 10, using Oculus Runtime, 0.6.0.1-beta, requires [specific instructions](https://www.reddit.com/comments/3f8g9d) to make it work.
 
 ### License
 MIT
