@@ -322,6 +322,9 @@ function update(){
       // update text, if it has a "name" field.
       if ( intersects[ 0 ].object.name )
       {
+        window.addEventListener("keyup", function(e){changePerspectiveToPoint(e, 5, 10, 15);}, false);
+        console.log(intersects[ 0 ].object);
+
         context1.clearRect(0,0,640,480);
         var message = intersects[ 0 ].object.name;
         updateToolBox(message);
@@ -359,6 +362,20 @@ function update(){
   // orbitMouseControls.update();
 }
 
+/*
+ * Change perspective based on bat by hitting the P button after hovering over the scatter plot point.
+ */
+function changePerspectiveToPoint(e, x, y, z) {
+  if(e.keyCode == "80") {
+    console.log("Triggered")
+    console.log(x);
+    console.log(y);
+    camera.position.x = 0;
+    camera.position.y = 60;
+    camera.position.z = -180;
+    camera.lookAt(scene.position);
+  }
+}
 
 /*
  * Renders the VR effect onto screen.
@@ -587,7 +604,7 @@ function randomizeBar(){
 }
 
 function ingestCSV(){
-  
+
 }
 
 function randomizeScatter(){
