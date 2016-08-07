@@ -29,7 +29,7 @@ initiate();
 coordinates(fileName, typeOfGraph);
 ```
 
-### Dependency
+### Dependencies
 You'll need a VR ready browser like MozVR or Google Chromium VR enabled build. Download either web browser at the following links. Optionally, you'll also need to setup the Leap Motion controller if you want to use motion controls.
 
 + MozVR: [http://mozvr.com/](http://mozvr.com/)
@@ -38,9 +38,9 @@ You'll need a VR ready browser like MozVR or Google Chromium VR enabled build. D
 + LeapMotion Driver: [https://www.leapmotion.com/setup](https://www.leapmotion.com/setup )
 
 ### Device Support and Drivers
-The latest Oculus Rift runtimes 0.7.0.0-beta and above do not currently work with laptops unfortunately. And don't use Windows 10 with Oculus Rift runtimes, 0.6.0.1 and below. The library requires the Oculus Rift infrared camera.
+The latest Oculus Rift runtimes 0.7.0.0-beta and above do not currently work with laptops unfortunately. Don't use Windows 10 with Oculus Rift runtimes, 0.6.0.1 and below, because those runtime versions are old.
 
-My configurations are:
+I used my laptop to run the library. Here are the software versions that I used:
 ```
 Oculus Runtime: 0.5.0.1-beta
 Leap Motion: 2.3.1
