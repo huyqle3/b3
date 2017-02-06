@@ -2,6 +2,8 @@ b3 [![Build Status](https://travis-ci.org/huyle333/b3.svg?branch=master)](https:
 ==
 b3 is an Oculus Rift and Leap Motion demo that enables VR motion controlled charts and graphs within web applications. Watch the [video demo](https://www.youtube.com/watch?v=-ZkI8hTWrHA).
 
+![](https://thumbs.gfycat.com/GrouchyDiligentAndeancat-size_restricted.gif)
+
 ### Instructions
 1. Web Server
 2. Generating Graphs from Data
