@@ -1,6 +1,6 @@
 b3 [![Build Status](https://travis-ci.org/huyle333/b3.svg?branch=master)](https://travis-ci.org/huyle333/b3)
 ==
-b3 was created on October 2015 while WebVR was in Beta. It was created with the Oculus DK2 before the CV1 was released.
+b3 was created on `October 2015` while WebVR was in Beta. It was created with the `Oculus DK2` before the CV1 was released.
 
 b3 is an Oculus Rift DK2 and Leap Motion demo that enables VR motion controlled charts and graphs within web applications. Watch the [video demo](https://www.youtube.com/watch?v=-ZkI8hTWrHA).
 
@@ -43,12 +43,13 @@ You'll need a VR ready browser. Double check your version with the `WebVR Browse
 ### Device Support and Drivers
 The latest Oculus Rift runtimes 0.7.0.0-beta and above - `March 2016` do not work with weak laptops unfortunately.
 
-- Don't use Windows 10 with Oculus Rift runtimes, 0.6.0.1 and below, because those runtime versions are too old for Windows 10!
 - Windows 10 requires Oculus Rift runtimes at least 0.6.0.1.
+- Oculus Rift runtimes, 0.6.0.1 and below runtime versions are too old for Windows 10!
 
-b3 was designed to work on weak laptops. My laptop had no external graphics card and used a 2012 Intel HD 3000 Graphics Card with 384MB of video memory.
+b3 was designed to work on weak laptops. My laptop had no external graphics card and used a `2012 Intel HD 3000 Graphics Card with 384MB of video memory`.
 
 Here are the software versions that I used at the time of core development `October 2015 - March 2016`:
+
 Back in the day, there was just one Oculus Runtime installation for all purposes. There was not a VR specific version for Leap Motion.
 ```
 Oculus Runtime: 0.5.0.1-beta
