@@ -49,9 +49,10 @@ The latest Oculus Rift runtimes 0.7.0.0-beta and above - `March 2016` do not wor
 b3 was designed to work on weak laptops. My laptop had no external graphics card and used a 2012 Intel HD 3000 Graphics Card with 384MB of video memory.
 
 Here are the software versions that I used at the time of core development `October 2015 - March 2016`:
+Back in the day, there was just one Oculus Runtime installation for all purposes. There was not a VR specific version for Leap Motion.
 ```
 Oculus Runtime: 0.5.0.1-beta
-Leap Motion: 2.3.1
+Leap Motion (Desktop): 2.3.1
 OS: Windows 8.1
 ```
 
