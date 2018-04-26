@@ -18,7 +18,7 @@ cd b3/examples/
 python -m SimpleHTTPServer
 ```
 
-After initiating the webserver inside examples/, go to [localhost:8000/index.html](localhost:8000/index.html) to see the examples.
+After initiating the webserver inside `examples/`, go to ![localhost:8000/index.html](localhost:8000/index.html) to see the examples.
 
 ### Generate Graphs from Data
 b3.js suppports JSON and CSV data. For now, follow the structure examples/bat-with-vr.html contains.
