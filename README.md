@@ -46,7 +46,7 @@ The latest Oculus Rift runtimes 0.7.0.0-beta and above - `March 2016` do not wor
 - Windows 10 requires Oculus Rift runtimes at least 0.6.0.1.
 - Oculus Rift runtimes, 0.6.0.1 and below runtime versions are too old for Windows 10!
 
-b3 was designed to work on weak laptops. My laptop had no external graphics card and used a `2012 Intel HD 3000 Graphics Card with 384MB of video memory`.
+b3 was designed to work on weak laptops. My laptop had no dedicated graphics card and used a `2012 Intel HD 3000 Graphics Card with 384MB of video memory`.
 
 Here are the software versions that I used at the time of core development `October 2015 - March 2016`:
 
