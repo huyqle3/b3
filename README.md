@@ -6,7 +6,7 @@ b3 is an Oculus Rift DK2 and Leap Motion demo that enables VR motion controlled 
 
 ![](https://thumbs.gfycat.com/GrouchyDiligentAndeancat-size_restricted.gif)
 
-### Instructions
+## Instructions
 1. Web Server
 2. Generating Graphs from Data
 3. Dependency
@@ -55,5 +55,5 @@ Leap Motion: 2.3.1
 OS: Windows 8.1
 ```
 
-### License
+## License
 MIT
